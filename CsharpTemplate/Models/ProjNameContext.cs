@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace [ProjectNameWithoutBracks].Models
 {
-  public class [ProjectNameWithoutBracks]Context : DbContext
+  public class [ProjectNameWithoutBracks]Context : IdentityDbContext<ApplicationUser>
   {
     public DbSet<PrimaryModel> PrimaryModel { get; set; }
     public DbSet<SecondaryModel> SecondaryModel { get; set; }
