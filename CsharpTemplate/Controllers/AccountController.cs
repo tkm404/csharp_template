@@ -1,18 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using [ProjectNameWithoutBracks].Models;
 using System.Threading.Tasks;
+using [ProjectNameWithoutBracks].Models;
 using [ProjectNameWithoutBracks].ViewModels;
 
 namespace [ProjectNameWithoutBracks].Controllers
 {
   public class AccountController : Controller
   {
-    private readonly [ProjectNameWithoutBracks]Context _db;
+    private readonly [ProjectNameWithoutBracks] Context _db;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
 
-    public AccountController (UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, [ProjectNameWithoutBracks]Context db)
+    public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, [ProjectNameWithoutBracks] Context db)
     {
       _userManager = userManager;
       _signInManager = signInManager;
@@ -30,7 +30,7 @@ namespace [ProjectNameWithoutBracks].Controllers
     }
 
     [HttpPost]
-    public async Task<ActionResult> Register (RegisterViewModel model)
+    public async Task<ActionResult> Register(RegisterViewModel model)
     {
       if (!ModelState.IsValid)
       {
@@ -53,6 +53,40 @@ namespace [ProjectNameWithoutBracks].Controllers
           return View(model);
         }
       }
+    }
+
+    public ActionResult Login()
+    {
+      return View();
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> Login(LoginViewModel model)
+    {
+      if (!ModelState.IsValid)
+      {
+        return View(model);
+      }
+      else
+      {
+        Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, isPersistent: true, lockoutOnFailure: false);
+        if (result.Succeeded)
+        {
+          return RedirectToAction("Index");
+        }
+        else
+        {
+          ModelState.AddModelError("", "There is something wrong with your email or username. Please try again.");
+          return View(model);
+        }
+      }
+    }
+
+    [HttpPost]
+    public async Task<ActionResult> LogOff()
+    {
+      await _signInManager.SignOutAsync();
+      return RedirectToAction("Index");
     }
   }
 }
