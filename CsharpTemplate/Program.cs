@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
 using [ProjectNameWithoutBracks].Models;
+
 
 namespace [ProjectNameWithoutBracks]
 {
@@ -22,6 +24,10 @@ namespace [ProjectNameWithoutBracks]
                           )
                         );
 
+        builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                      .AddEntityFrameworkStores<[ProjectNameWithoutBracks]Context>()
+                      .AddDefaultTokenProviders();
+
         WebApplication app = builder.Build();
 
         // app.UseDeveloperExceptionPage();
@@ -29,6 +35,9 @@ namespace [ProjectNameWithoutBracks]
         app.UseStaticFiles();
 
         app.UseRouting();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.MapControllerRoute(
             name: "default",
